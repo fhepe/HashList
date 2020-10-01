@@ -24,7 +24,15 @@ type
     [Test]
     [TestCase('TestAdicionar1Registro', '1')]
     [TestCase('TestAdicionar100Registros', '100')]
-    procedure DeveAdicionarRegistrosDeMultipla(const AQuantidadeRegistros: Integer);
+    procedure DeveAdicionarRegistrosDeFormaMultipla(const AQuantidadeRegistros: Integer);
+    [Test]
+    [TestCase('TestRemover1Registro', '1')]
+    [TestCase('TestRemover5Registros', '5')]
+    procedure DeveRemoverRegistrosDeFormaUnitaria(const AQuantidadeRegistros: Integer);
+    [Test]
+    [TestCase('TestRemover1Registro', '1')]
+    [TestCase('TestRemover200Registros', '200')]
+    procedure DeveRemoverRegistrosDeFormaMultipla(const AQuantidadeRegistros: Integer);
   end;
 
 implementation
@@ -55,7 +63,7 @@ begin
   end;
 end;
 
-procedure TTestIntegerHashList.DeveAdicionarRegistrosDeMultipla(const AQuantidadeRegistros: Integer);
+procedure TTestIntegerHashList.DeveAdicionarRegistrosDeFormaMultipla(const AQuantidadeRegistros: Integer);
 var
   aArrayInteger: TArray<Integer>;
 begin
@@ -71,6 +79,35 @@ begin
   begin
     Assert.Contains<Integer>(IntegerHashList.Values, I, 'Registro não encontrado!');
   end;
+end;
+
+procedure TTestIntegerHashList.DeveRemoverRegistrosDeFormaMultipla(const AQuantidadeRegistros: Integer);
+var
+  aArrayInteger: TArray<Integer>;
+begin
+  DeveAdicionarRegistrosDeFormaMultipla(AQuantidadeRegistros);
+
+  aArrayInteger := [];
+  for var I: Integer := 1 to AQuantidadeRegistros do
+  begin
+    aArrayInteger := aArrayInteger + [I];
+  end;
+
+  IntegerHashList.Remove(aArrayInteger);
+
+  Assert.AreEqual(0, IntegerHashList.Count, 'Quantidade diferente do esperado!');
+end;
+
+procedure TTestIntegerHashList.DeveRemoverRegistrosDeFormaUnitaria(const AQuantidadeRegistros: Integer);
+begin
+  DeveAdicionarRegistrosDeFormaUnitaria(AQuantidadeRegistros);
+
+  for var I: Integer := 1 to AQuantidadeRegistros do
+  begin
+    IntegerHashList.Remove(I);
+  end;
+
+  Assert.AreEqual(0, IntegerHashList.Count, 'Quantidade diferente do esperado!');
 end;
 
 initialization
