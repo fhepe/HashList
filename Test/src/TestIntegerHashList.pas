@@ -33,6 +33,11 @@ type
     [TestCase('TestRemover1Registro', '1')]
     [TestCase('TestRemover200Registros', '200')]
     procedure DeveRemoverRegistrosDeFormaMultipla(const AQuantidadeRegistros: Integer);
+    [Test]
+    [TestCase('TestNaoDeveConterRegistroNaListaVazia', '0,1')]
+    [TestCase('TestNaoDeveConterRegistroNaLista', '10,11')]
+    [TestCase('TestDeveConterRegistroNaLista', '10,5')]
+    procedure DeveConterRegistro(const AQuantidadeRegistros, AValorAVerificar: Integer);
   end;
 
 implementation
@@ -61,6 +66,13 @@ begin
   begin
     Assert.Contains<Integer>(IntegerHashList.Values, I, 'Registro não encontrado!');
   end;
+end;
+
+procedure TTestIntegerHashList.DeveConterRegistro(const AQuantidadeRegistros, AValorAVerificar: Integer);
+begin
+  DeveAdicionarRegistrosDeFormaMultipla(AQuantidadeRegistros);
+
+  Assert.AreEqual(AQuantidadeRegistros >= AValorAVerificar, IntegerHashList.Contains(AValorAVerificar), 'Retorno diferente do esperado!');
 end;
 
 procedure TTestIntegerHashList.DeveAdicionarRegistrosDeFormaMultipla(const AQuantidadeRegistros: Integer);
